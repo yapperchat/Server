@@ -2,15 +2,15 @@ package server;
 
 import java.io.Serializable;
 
-import client.Client;
-import client.ClientInstruction;
+import core.application.Application;
+import core.command.Instruction;
 
-public class Kick implements ClientInstruction, Serializable {
+public class Kick implements Instruction, Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	public void run(Client client, String[] args) {
-		client.disconnect();
+	public void run(Application application, String[] args) {
+		application.disconnect();
 	}
 
 }
