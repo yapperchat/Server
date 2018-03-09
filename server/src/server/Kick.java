@@ -3,9 +3,9 @@ package server;
 import java.io.Serializable;
 
 import client.Client;
-import core.command.Instruction;
+import client.ClientInstruction;
 
-public class Kick implements Instruction, Serializable {
+public class Kick implements ClientInstruction, Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
