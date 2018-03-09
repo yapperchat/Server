@@ -43,7 +43,7 @@ public class ClientInThread implements Runnable {
                 	if (!this.server.banList.contains(input.getID())) {
                 		print("[" + input.getTimestamp() + "] " + input.getID() + ": " + input.getText());
                 		
-                		if (input.getAttachmentType() != AttachmentType.INSTRUCTION) {
+                		if (input.getAttachmentType() != AttachmentType.CLIENTINSTRUCTION) {
                 			this.server.log = this.server.log + "\n[" + input.getTimestamp() + "] " + input.getUser() + ": " + input.getText();
                 		}
             			

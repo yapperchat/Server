@@ -316,7 +316,7 @@ public class ChatServer extends ApplicationWindow {
     			
     			args[0] = temp;
     			Serializable inst = new Kick();
-    			Message message = new Message(("[Kicked]:" + args[0]), Misc.getTime(), "[SERVER]", "<server>", inst, AttachmentType.INSTRUCTION, args);
+    			Message message = new Message(("[Kicked]:" + args[0]), Misc.getTime(), "[SERVER]", "<server>", inst, AttachmentType.CLIENTINSTRUCTION, args);
     			for(ClientOutThread client : getClientIns()){
         			client.addNextMessage(message);
         		}
