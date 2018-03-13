@@ -153,13 +153,18 @@ public class ChatServer extends ApplicationWindow implements Application {
                 clientInThread.start();
                 clientOutThread.start();
                 
+                Message message = (Message) clientIn.in.readObject();
+                
+                
                 clientOut.addNextMessage(new Message(this.log, Misc.getTime(), "[SERVER]", "<SERVER>"));
                 
                 toClients.add(clientOut);
                 fromClients.add(clientIn);
             } catch (IOException ex) {
                 output("[ERROR] ACCEPT FAILED ON: " + serverPort);
-            }
+            } catch (ClassNotFoundException e) {
+				output("[ERROR] ACCEPT FAILED ON: " + serverPort);
+			}
         }
     }
     

@@ -18,6 +18,7 @@ public class ClientInThread implements Runnable {
 	private Socket socket;
 	
 	private boolean running = true;
+	protected ObjectInputStream in;
 	
 	public ClientInThread(ChatServer server, Socket socket) {
 		this.server = server;
@@ -35,7 +36,7 @@ public class ClientInThread implements Runnable {
     @Override
     public void run() {
         try {
-            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+            in = new ObjectInputStream(socket.getInputStream());
          
             while(!socket.isClosed() && this.server.isRunning()){
             	try {
