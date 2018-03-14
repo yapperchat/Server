@@ -153,7 +153,7 @@ public class ChatServer extends ApplicationWindow implements Application {
                 clientInThread.start();
                 clientOutThread.start();
                 
-                Message message = (Message) clientIn.in.readObject();
+                //Message message = (Message) clientIn.in.readObject();
                 
                 
                 clientOut.addNextMessage(new Message(this.log, Misc.getTime(), "[SERVER]", "<SERVER>"));
@@ -162,9 +162,7 @@ public class ChatServer extends ApplicationWindow implements Application {
                 fromClients.add(clientIn);
             } catch (IOException ex) {
                 output("[ERROR] ACCEPT FAILED ON: " + serverPort);
-            } catch (ClassNotFoundException e) {
-				output("[ERROR] ACCEPT FAILED ON: " + serverPort);
-			}
+            }
         }
     }
     
@@ -237,11 +235,9 @@ public class ChatServer extends ApplicationWindow implements Application {
     	});
     	this.commands.add(new Command() {
     		public void run(String[] args) {
-    			Message message = new Message(args[0], Misc.getTime(), "[SERVER]", "<server>");
+    			Message message = new Message(addArgs(args), Misc.getTime(), "[SERVER]", "<server>");
     			
-    			for(ClientOutThread client : getClientIns()){
-        			client.addNextMessage(message);
-        		}
+    			send(message);
     		}
     		
     		public String[] getTriggers() {
@@ -314,18 +310,10 @@ public class ChatServer extends ApplicationWindow implements Application {
     	});
     	this.commands.add(new Command() {
     		public void run(String[] args) {
-    			String temp = args[0];
-    			
-    			for (int i = 1; i < args.length; i++) {
-    				temp += (" " + args[i]);
-    			}
-    			
-    			args[0] = temp;
+    			args[0] = addArgs(args);
     			Serializable inst = new Kick();
     			Message message = new Message(("[Kicked]:" + args[0]), Misc.getTime(), "[SERVER]", "<server>", inst, AttachmentType.CLIENTINSTRUCTION, args);
-    			for(ClientOutThread client : getClientIns()){
-        			client.addNextMessage(message);
-        		}
+    			sendMessage(message);
     		}
     		
     		public String[] getTriggers() {
@@ -369,6 +357,32 @@ public class ChatServer extends ApplicationWindow implements Application {
     
     public void output(Message message) {
     	this.output(message.toString());
+    }
+    
+    public static String addArgs(String[] args) {
+    	String temp = args[0];
+		
+		for (int i = 1; i < args.length; i++) {
+			temp += (" " + args[i]);
+		}
+		
+		return temp;
+    }
+    
+    private void sendMessage(Message input) {
+    	for (ClientOutThread c_out : getClientIns()) {
+			c_out.addNextMessage(input);
+		}
+    }
+    
+    private void send(Message input) {
+    	output("[" + input.getTimestamp() + "] " + input.getID() + ": " + input.getText());
+		
+		if (input.getAttachmentType() != AttachmentType.CLIENTINSTRUCTION && input.getAttachmentType() != AttachmentType.SERVERINSTRUCTION) {
+			this.log = this.log + "\n[" + input.getTimestamp() + "] " + input.getUser() + ": " + input.getText();
+		}
+		
+		sendMessage(input);
     }
     
     /*public byte[] getKey() {
