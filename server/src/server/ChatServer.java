@@ -312,7 +312,7 @@ public class ChatServer extends ApplicationWindow implements Application {
     		public void run(String[] args) {
     			args[0] = addArgs(args);
     			Serializable inst = new Kick();
-    			Message message = new Message(("[Kicked]:" + args[0]), Misc.getTime(), "[SERVER]", "<server>", inst, AttachmentType.CLIENTINSTRUCTION, args);
+    			Message message = new Message(("[Kicked]:" + args[0]), Misc.getTime(), "[SERVER]", "<server>", inst, AttachmentType.INSTRUCTION, args);
     			sendMessage(message);
     		}
     		
@@ -378,7 +378,7 @@ public class ChatServer extends ApplicationWindow implements Application {
     private void send(Message input) {
     	output("[" + input.getTimestamp() + "] " + input.getID() + ": " + input.getText());
 		
-		if (input.getAttachmentType() != AttachmentType.CLIENTINSTRUCTION && input.getAttachmentType() != AttachmentType.SERVERINSTRUCTION) {
+		if (input.getAttachmentType() != AttachmentType.INSTRUCTION && input.getAttachmentType() != AttachmentType.INSTRUCTION) {
 			this.log = this.log + "\n[" + input.getTimestamp() + "] " + input.getUser() + ": " + input.getText();
 		}
 		
