@@ -1,5 +1,6 @@
 package server;
 
+import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,6 +18,7 @@ import java.util.List;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 
 import constraints.Constraints;
 import core.application.Application;
@@ -31,11 +33,8 @@ public class ChatServer extends ApplicationWindow implements Application {
 	
 	private static final long serialVersionUID = 1L;
 
-	private static final int portNumber = 4444;
+	private static final int PORT_NUMBER = 4444;
     
-    private ArrayList<Command> commands;
-    
-    private int serverPort;
     private String serverHost;
     private List<ClientOutThread> toClients;
     private List<ClientInThread> fromClients;
@@ -47,24 +46,21 @@ public class ChatServer extends ApplicationWindow implements Application {
     protected String log;
     
     private GridBagLayout layout;
+   
     
-    private JTextArea textArea;
-    private Constraints c_textArea;
+    private JTextPane textPane;
+    private Constraints constrainedTextArea;;
     
     private JTextField textField;
     private Constraints c_textField;
     
-    /*private JTextField keyField;
-    private Constraints c_keyField;*/
-    
     public static void main(String[] args) {
-        ChatServer server = new ChatServer(portNumber);
+        ChatServer server = new ChatServer(PORT_NUMBER);
         server.startServer();
     }
 
-    public ChatServer(int portNumber){
-    	super("Server " + portNumber);
-        this.serverPort = portNumber;
+    public ChatServer() {
+    	super("Server " + PORT_NUMBER);
         this.log = "Chat log";
         
         try {
@@ -78,11 +74,12 @@ public class ChatServer extends ApplicationWindow implements Application {
         
         layout = new GridBagLayout();
     	setLayout(layout);
+   
+    	this.textPane = new JTextPane();
+    	this.textPane.setSize(new Dimension(75, 20));
+    	constrainedTextArea = new Constraints(0, 1);
     	
-    	textArea = new JTextArea();
-    	textArea.setColumns(75);
-    	textArea.setRows(20);
-    	c_textArea = new Constraints(0,1);
+    	this.textPane.set
     	
     	textArea.setLineWrap(true);
         textArea.setEditable(false);
@@ -128,10 +125,10 @@ public class ChatServer extends ApplicationWindow implements Application {
         
         try {
         	InetAddress addr = InetAddress.getByName(this.serverHost);
-            serverSocket = new ServerSocket(serverPort, 50, addr);
+            serverSocket = new ServerSocket(PORT_NUMBER, 50, addr);
             acceptClients(serverSocket);
         } catch (IOException e){
-            output("[ERROR] COULD NOT LISTEN ON PORT: " + serverPort);
+            output("[ERROR] COULD NOT LISTEN ON PORT: " + PORT_NUMBER);
             this.stop();
         }
     }
@@ -161,7 +158,7 @@ public class ChatServer extends ApplicationWindow implements Application {
                 toClients.add(clientOut);
                 fromClients.add(clientIn);
             } catch (IOException ex) {
-                output("[ERROR] ACCEPT FAILED ON: " + serverPort);
+                output("[ERROR] ACCEPT FAILED ON: " + PORT_NUMBER);
             }
         }
     }
@@ -352,6 +349,7 @@ public class ChatServer extends ApplicationWindow implements Application {
     
     public void output(String message) {
     	this.textArea.setText(this.textArea.getText() + "\n" + message);
+    	this.textArea.get
     	this.textArea.setCaretPosition(this.textArea.getText().length());
     }
     
