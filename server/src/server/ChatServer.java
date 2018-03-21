@@ -32,6 +32,7 @@ import core.command.CommandRegistrar;
 import core.message.AttachmentType;
 import core.message.Message;
 import core.misc.Misc;
+import server.commands.Commands;
 import tools.Tools;
 import window.ApplicationWindow;
 
@@ -178,27 +179,9 @@ public class ChatServer extends ApplicationWindow implements Application {
     private void initActions() {
     	this.commands = new CommandRegistrar();
     	this.banList = new HashSet<String>();
-    	this.commands.add(new Command() {
-    		public void run(String[] args) {
-    			output("[COMMAND] COMMANDS:");
-    			for (int i = 1; i < commands.size(); i++) {
-    				output(commands.get(i).getTriggers()[0] + ": " + commands.get(i).getInfo());
-    			}
-    		}
-    		
-    		public String[] getTriggers() {
-    			return new String[] {
-    					"/help",
-    					"/commands",
-    					"/h",
-    			};
-    		}
-    		
-    		public String getInfo() {
-    			return "Lists all availible commands";
-    		}
-    	});
-    	this.commands.add(new Command() {
+    	Commands commands = new Commands();
+    	
+    	commands.add(new Command() {
     		public void run(String[] args) {
     			output("[COMMAND] IP: " + serverSocket.getInetAddress().toString());
     		}
