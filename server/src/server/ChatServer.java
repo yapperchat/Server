@@ -23,6 +23,7 @@ import javax.swing.JTextPane;
 import constraints.Constraints;
 import core.application.Application;
 import core.command.Command;
+import core.command.CommandRegistrar;
 import core.message.AttachmentType;
 import core.message.Message;
 import core.misc.Misc;
@@ -41,6 +42,8 @@ public class ChatServer extends ApplicationWindow implements Application {
     
     protected HashSet<String> banList;
     
+    protected CommandRegistrar commands;
+    
     ServerSocket serverSocket;
     
     protected String log;
@@ -55,7 +58,7 @@ public class ChatServer extends ApplicationWindow implements Application {
     private Constraints c_textField;
     
     public static void main(String[] args) {
-        ChatServer server = new ChatServer(PORT_NUMBER);
+        ChatServer server = new ChatServer();
         server.startServer();
     }
 
@@ -79,13 +82,12 @@ public class ChatServer extends ApplicationWindow implements Application {
     	this.textPane.setSize(new Dimension(75, 20));
     	constrainedTextArea = new Constraints(0, 1);
     	
-    	this.textPane.set
+    	this.textPane.setBounds(new Rectangle(100, 100));
     	
-    	textArea.setLineWrap(true);
-        textArea.setEditable(false);
-        textArea.setVisible(true);
+        textPane.setEditable(false);
+        textPane.setVisible(true);
 
-        JScrollPane scroll = new JScrollPane (textArea);
+        JScrollPane scroll = new JScrollPane (textPane);
         scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         
         add(scroll, c_textArea);
@@ -164,7 +166,7 @@ public class ChatServer extends ApplicationWindow implements Application {
     }
     
     private void initActions() {
-    	this.commands = new ArrayList<Command>();
+    	this.commands = new CommandRegistrar();
     	this.banList = new HashSet<String>();
     	this.commands.add(new Command() {
     		public void run(String[] args) {
