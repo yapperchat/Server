@@ -1,5 +1,6 @@
 package server;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -19,6 +20,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 import constraints.Constraints;
 import core.application.Application;
@@ -35,6 +40,8 @@ public class ChatServer extends ApplicationWindow implements Application {
 	private static final long serialVersionUID = 1L;
 
 	private static final int PORT_NUMBER = 4444;
+	
+	protected static int textSize = 11;
     
     private String serverHost;
     private List<ClientOutThread> toClients;
@@ -52,7 +59,9 @@ public class ChatServer extends ApplicationWindow implements Application {
    
     
     private JTextPane textPane;
-    private Constraints constrainedTextArea;;
+    private Constraints c_textPane;
+    private StyledDocument doc;
+    private Style style;
     
     private JTextField textField;
     private Constraints c_textField;
@@ -79,18 +88,19 @@ public class ChatServer extends ApplicationWindow implements Application {
     	setLayout(layout);
    
     	this.textPane = new JTextPane();
-    	this.textPane.setSize(new Dimension(75, 20));
-    	constrainedTextArea = new Constraints(0, 1);
-    	
-    	this.textPane.setBounds(new Rectangle(100, 100));
+    	this.textPane.setSize(new Dimension(75 * textSize, 20 * textSize));
+    	c_textPane = new Constraints(0, 1);
     	
         textPane.setEditable(false);
         textPane.setVisible(true);
-
+        
+        doc = textPane.getStyledDocument();
+        Style style = textPane.addStyle("style", null);
+        
         JScrollPane scroll = new JScrollPane (textPane);
         scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         
-        add(scroll, c_textArea);
+        add(scroll, c_textPane);
     	
     	textField = new JTextField();
         textField.setColumns(50);
@@ -350,13 +360,22 @@ public class ChatServer extends ApplicationWindow implements Application {
     }
     
     public void output(String message) {
-    	this.textArea.setText(this.textArea.getText() + "\n" + message);
-    	this.textArea.get
-    	this.textArea.setCaretPosition(this.textArea.getText().length());
+    	output(message, Color.BLACK);
     }
     
     public void output(Message message) {
     	this.output(message.toString());
+    }
+    
+    public void output(String message, Color color) {
+    	message = "\n" + message;
+    	StyleConstants.setForeground(style, color);
+        try {
+        	doc.insertString(doc.getLength(), "BLAH ",style);
+        	this.textPane.setCaretPosition(this.textPane.getText().length());
+        } catch (BadLocationException e){
+        }
+        StyleConstants.setForeground(style, Color.BLACK);
     }
     
     public static String addArgs(String[] args) {
